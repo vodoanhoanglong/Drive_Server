@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  controller:
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./services/controller/migrations:/hasura-migrations
+      - ./services/controller/metadata:/hasura-metadata
+
+  auth:
+    image: golang:1.16
+    command: "go run /app/services/auth/server"
+    working_dir: /app
+    volumes:
+      - ./services/auth:/app/services/auth:ro
+      - ./go.mod:/app/go.mod:ro
+      - ./go.sum:/app/go.sum:ro
+      - ./pkg:/app/pkg:ro
+      - ./vendor:/app/vendor:ro
+    environment:
+      LOG_LEVEL: debug

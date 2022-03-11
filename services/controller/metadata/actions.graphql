@@ -1,0 +1,191 @@
+type Mutation {
+  changeAccountPassword(
+    data: ChangeAccountPasswordInput!
+  ): MessageOutput
+}
+
+type Mutation {
+  createAccount(
+    data: CreateAccountInput!
+  ): CreateAccountOutput
+}
+
+type Mutation {
+  forgotPassword(
+    data: Input!
+  ): Output!
+}
+
+type Mutation {
+  login(
+    data: LoginInput!
+  ): AccessTokenOutput!
+}
+
+type Mutation {
+  moveFile(
+    data: MoveFileInput!
+  ): MoveFileOutput
+}
+
+type Mutation {
+  refreshToken(
+    data: RefreshTokenInput!
+  ): AccessTokenOutput!
+}
+
+type Mutation {
+  updateFile(
+    data: UpdateFileInput!
+  ): UpdateFileOutput
+}
+
+type Mutation {
+  uploadFile(
+    data: UploadFileInput!
+  ): UploadFileOutput
+}
+
+input ChangeUserPasswordInput {
+  user_id: String!
+  new_password: String!
+}
+
+input CreateAccountInput {
+  email: String
+  display_name: String
+  role: String!
+  password: String
+}
+
+input ChangeAccountPasswordInput {
+  account_id: String!
+  new_password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input ChangePasswordInput {
+  current_password: String!
+  new_password: String!
+}
+
+input RefreshTokenInput {
+  access_token: String!
+  refresh_token: String!
+  auth_provider_type: String
+}
+
+input FilterUser {
+  filter: FilterInput!
+  pagination: PaginationInput!
+}
+
+input SearchByEmailInput {
+  search: String!
+}
+
+input PaginationInput {
+  page: Int!
+  size: Int!
+}
+
+input FilterInput {
+  search: String!
+}
+
+input Input {
+  email: String!
+}
+
+input RevokeTokenInput {
+  access_token: String!
+  refresh_token: String!
+  auth_provider_type: String
+}
+
+input UploadFileInput {
+  name: String!
+  path: String!
+  size: Int!
+  url: String!
+  extension: String!
+}
+
+input MoveFileInput {
+  to_path: String!
+  to_extension: String!
+  from_path: String!
+  from_extension: String!
+  from_name: String!
+}
+
+input UpdateFileInput {
+  id: String!
+  name: String!
+  path: String!
+  extension: String!
+}
+
+type MessageOutput {
+  message: String!
+  id: String!
+  password: String!
+}
+
+type AffectedRowsOutput {
+  affected_rows: Int
+}
+
+type CreateAccountOutput {
+  id: String
+}
+
+type AccessTokenOutput {
+  access_token: String!
+  token_type: String!
+  expires_in: Int!
+  refresh_token: String
+  scope: String
+}
+
+type Results {
+  page: Int!
+  size: Int!
+  userList: json!
+}
+
+type Output {
+  email: String!
+  token: String!
+  message: String!
+  id: String!
+}
+
+type RevokeTokenOutput {
+  access_token: String!
+  token_type: String!
+  expires_in: Int!
+  refresh_token: String
+  scope: String
+}
+
+type UploadFileOutput {
+  id: String
+  name: String
+  path: String
+  url: String
+}
+
+type MoveFileOutput {
+  message: String
+}
+
+type UpdateFileOutput {
+  id: String
+  name: String
+}
+

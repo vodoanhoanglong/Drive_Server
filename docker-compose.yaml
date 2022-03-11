@@ -1,0 +1,64 @@
+version: "3.7"
+
+services:
+  postgres:
+    image: postgres:14
+    restart: always
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./scripts/docker-entrypoint-initdb.d/000_createdb.sql:/docker-entrypoint-initdb.d/000_createdb.sql
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  controller:
+    image: hasura/graphql-engine:v2.2.0.cli-migrations-v3
+    ports:
+      - "8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.controller.rule=Host(`intern-demo-controller.nexlab.tech`)"
+    volumes:
+      - ./services/controller/migrations:/hasura-migrations
+      - ./services/controller/metadata:/hasura-metadata
+    depends_on:
+      - "postgres"
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
+      ## enable the console served by server
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      # HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, query-log
+      HASURA_GRAPHQL_ADMIN_SECRET: ${CONTROLLER_ADMIN_SECRET}
+      HASURA_GRAPHQL_AUTH_HOOK: http://auth:8080/verify-token
+      HASURA_GRAPHQL_AUTH_HOOK_MODE: POST
+      AUTH_BASE_URL: http://auth:8080
+
+  auth:
+    restart: always
+    image: telehealth-auth
+    labels:
+      - "traefik.enable=false"
+    ports:
+      - "8080"
+    # volumes:
+    #   - ./certs/google-cert.json:/google-cert.json
+    environment:
+      CONTROLLER_URL: http://controller:8080/v1/graphql
+      CONTROLLER_ADMIN_SECRET: ${CONTROLLER_ADMIN_SECRET}
+      DEFAULT_AUTH_PROVIDER: ${DEFAULT_AUTH_PROVIDER}
+      GOOGLE_APPLICATION_CREDENTIALS: /google-cert.json
+      SESSION_KEY: ${SESSION_KEY}
+      SESSION_TTL: ${SESSION_TTL}
+      SESSION_REFRESH_TTL: ${SESSION_REFRESH_TTL}
+      JWT_ISSUER: ${JWT_ISSUER}
+      DEFAULT_ROLE: ${DEFAULT_ROLE}
+      PHONE_CODE: ${PHONE_CODE}
+      EMAIL: ${EMAIL}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+
+volumes:
+  db_data:

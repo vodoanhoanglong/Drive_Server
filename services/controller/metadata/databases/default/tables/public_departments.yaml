@@ -1,0 +1,38 @@
+table:
+  name: departments
+  schema: public
+array_relationships:
+- name: users
+  using:
+    foreign_key_constraint_on:
+      column: departmentId
+      table:
+        name: users
+        schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - status
+    - createdBy
+    - des
+    - name
+    - updatedBy
+    - createdAt
+    - updatedAt
+    - id
+    filter: {}
+  role: moderator
+- permission:
+    allow_aggregations: true
+    columns:
+    - status
+    - createdBy
+    - des
+    - name
+    - updatedBy
+    - createdAt
+    - updatedAt
+    - id
+    filter: {}
+  role: user

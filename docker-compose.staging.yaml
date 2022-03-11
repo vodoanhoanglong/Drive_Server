@@ -1,0 +1,27 @@
+version: "3.7"
+services:  
+  gateway:
+    restart: always
+    image: traefik:2.5.5
+    labels:
+      - "traefik.enable=false"
+    command:
+      - --providers.docker=true
+    # - --log.level=DEBUG
+    # - --api.insecure=true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  controller:
+    volumes:
+      - ./services/controller/migrations:/hasura-migrations
+      - ./services/controller/metadata:/hasura-metadata
+
+  auth:
+    image: telehealth-auth
+    build:
+      context: .
+      dockerfile: ./services/auth/Dockerfile
