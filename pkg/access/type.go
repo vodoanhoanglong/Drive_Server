@@ -16,6 +16,7 @@ const (
 	RoleAnonymous      Role = "anonymous"
 	RoleAdmin          Role = "admin"
 	RoleUser           Role = "user"
+	// RoleModerator      Role = "moderator"
 )
 
 var (

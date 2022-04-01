@@ -2,68 +2,68 @@ table:
   name: users
   schema: public
 object_relationships:
-- name: account
-  using:
-    foreign_key_constraint_on: id
+  - name: account
+    using:
+      foreign_key_constraint_on: id
 array_relationships:
-- name: files
-  using:
-    foreign_key_constraint_on:
-      column: userId
-      table:
-        name: files
-        schema: public
-- name: shares
-  using:
-    foreign_key_constraint_on:
-      column: userId
-      table:
-        name: shares
-        schema: public
+  - name: files
+    using:
+      foreign_key_constraint_on:
+        column: userId
+        table:
+          name: files
+          schema: public
+  - name: shares
+    using:
+      foreign_key_constraint_on:
+        column: userId
+        table:
+          name: shares
+          schema: public
 insert_permissions:
-- permission:
-    backend_only: false
-    check:
-      id:
-        _eq: X-Hasura-User-Id
-    columns:
-    - createdAt
-    - createdBy
-    - fullName
-    - id
-    - phone
-    - status
-    - updatedAt
-    - updatedBy
-    set:
-      id: x-hasura-User-Id
-  role: user
+  - permission:
+      backend_only: false
+      check:
+        id:
+          _eq: X-Hasura-User-Id
+      columns:
+        - createdAt
+        - createdBy
+        - fullName
+        - id
+        - phone
+        - status
+        - updatedAt
+        - updatedBy
+      set:
+        id: x-hasura-User-Id
+    role: user
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - fullName
-    - id
-    - phone
-    filter: {}
-  role: user
+  - permission:
+      allow_aggregations: true
+      columns:
+        - fullName
+        - id
+        - phone
+      filter: {}
+    role: user
 update_permissions:
-- permission:
-    check:
-      id:
-        _eq: X-Hasura-User-Id
-    columns:
-    - createdAt
-    - createdBy
-    - fullName
-    - id
-    - phone
-    - status
-    - updatedAt
-    - updatedBy
-    filter:
-      id:
-        _eq: X-Hasura-User-Id
-    set:
-      id: x-hasura-User-Id
-  role: user
+  - permission:
+      check:
+        id:
+          _eq: X-Hasura-User-Id
+      columns:
+        - createdAt
+        - createdBy
+        - fullName
+        - id
+        - phone
+        - status
+        - updatedAt
+        - updatedBy
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      set:
+        id: x-hasura-User-Id
+    role: user

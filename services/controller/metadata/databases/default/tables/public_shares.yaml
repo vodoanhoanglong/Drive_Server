@@ -2,76 +2,76 @@ table:
   name: shares
   schema: public
 object_relationships:
-- name: file
-  using:
-    foreign_key_constraint_on: fileId
-- name: user
-  using:
-    foreign_key_constraint_on: userId
+  - name: file
+    using:
+      foreign_key_constraint_on: fileId
+  - name: user
+    using:
+      foreign_key_constraint_on: userId
 insert_permissions:
-- permission:
-    backend_only: false
-    check:
-      file:
-        _and:
-        - userId:
-            _eq: X-Hasura-User-Id
-        - path:
-            _nsimilar: general%
-    columns:
-    - createdAt
-    - createdBy
-    - fileId
-    - status
-    - updatedAt
-    - updatedBy
-    - userId
-  role: user
+  - permission:
+      backend_only: false
+      check:
+        file:
+          _and:
+            - userId:
+                _eq: X-Hasura-User-Id
+            - path:
+                _nsimilar: general%
+      columns:
+        - createdAt
+        - createdBy
+        - fileId
+        - status
+        - updatedAt
+        - updatedBy
+        - userId
+    role: user
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - createdAt
-    - createdBy
-    - fileId
-    - status
-    - updatedAt
-    - updatedBy
-    - userId
-    filter:
-      _and:
-      - userId:
-          _eq: X-Hasura-User-Id
-      - status:
-          _eq: 0
-      - file:
-          status:
-            _eq: 0
-  role: user
+  - permission:
+      allow_aggregations: true
+      columns:
+        - createdAt
+        - createdBy
+        - fileId
+        - status
+        - updatedAt
+        - updatedBy
+        - userId
+      filter:
+        _and:
+          - userId:
+              _eq: X-Hasura-User-Id
+          - status:
+              _eq: 0
+          - file:
+              status:
+                _eq: 0
+    role: user
 update_permissions:
-- permission:
-    check:
-      _or:
-      - userId:
-          _eq: X-Hasura-User-Id
-      - file:
-          userId:
-            _eq: X-Hasura-User-Id
-    columns:
-    - createdAt
-    - createdBy
-    - fileId
-    - status
-    - updatedAt
-    - updatedBy
-    - userId
-    filter:
-      _or:
-      - userId:
-          _eq: X-Hasura-User-Id
-      - file:
-          userId:
-            _eq: X-Hasura-User-Id
-    set:
-      userId: x-hasura-User-Id
-  role: user
+  - permission:
+      check:
+        _or:
+          - userId:
+              _eq: X-Hasura-User-Id
+          - file:
+              userId:
+                _eq: X-Hasura-User-Id
+      columns:
+        - createdAt
+        - createdBy
+        - fileId
+        - status
+        - updatedAt
+        - updatedBy
+        - userId
+      filter:
+        _or:
+          - userId:
+              _eq: X-Hasura-User-Id
+          - file:
+              userId:
+                _eq: X-Hasura-User-Id
+      set:
+        userId: x-hasura-User-Id
+    role: user
