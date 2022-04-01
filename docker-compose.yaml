@@ -16,9 +16,9 @@ services:
     image: hasura/graphql-engine:v2.2.0.cli-migrations-v3
     ports:
       - "8080"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.controller.rule=Host(`intern-demo-controller.nexlab.tech`)"
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.controller.rule=Host(`intern-demo-controller.nexlab.tech`)"
     volumes:
       - ./services/controller/migrations:/hasura-migrations
       - ./services/controller/metadata:/hasura-metadata

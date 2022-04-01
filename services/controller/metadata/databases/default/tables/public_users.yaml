@@ -1,6 +1,10 @@
 table:
   name: users
   schema: public
+object_relationships:
+  - name: account
+    using:
+      foreign_key_constraint_on: id
 array_relationships:
   - name: files
     using:
