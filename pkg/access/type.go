@@ -15,8 +15,8 @@ const (
 	XHasuraCurrentTime      = "x-hasura-current-time"
 	RoleAnonymous      Role = "anonymous"
 	RoleAdmin          Role = "admin"
-	RoleModerator      Role = "moderator"
 	RoleUser           Role = "user"
+	// RoleModerator      Role = "moderator"
 )
 
 var (
@@ -27,7 +27,7 @@ func GetRoles() []string {
 	return []string{
 		string(RoleAnonymous),
 		string(RoleAdmin),
-		string(RoleModerator),
+		string(RoleUser),
 	}
 }
 

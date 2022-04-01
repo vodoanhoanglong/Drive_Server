@@ -2,45 +2,21 @@ table:
   name: account
   schema: public
 object_relationships:
-- name: user
-  using:
-    foreign_key_constraint_on:
-      column: id
-      table:
-        name: users
-        schema: public
+  - name: user
+    using:
+      foreign_key_constraint_on:
+        column: id
+        table:
+          name: users
+          schema: public
 select_permissions:
-- permission:
-    allow_aggregations: true
-    columns:
-    - avatar_url
-    - display_name
-    - email
-    - id
-    - role
-    filter: {}
-  role: moderator
-- permission:
-    allow_aggregations: true
-    columns:
-    - avatar_url
-    - display_name
-    - email
-    - id
-    - role
-    filter: {}
-  role: user
-update_permissions:
-- permission:
-    check: null
-    columns:
-    - avatar_url
-    - display_name
-    - email
-    - role
-    filter: {}
-  role: moderator
-delete_permissions:
-- permission:
-    filter: {}
-  role: moderator
+  - permission:
+      allow_aggregations: true
+      columns:
+        - avatar_url
+        - display_name
+        - email
+        - id
+        - role
+      filter: {}
+    role: user
