@@ -34,27 +34,6 @@ insert_permissions:
     - userId
     set:
       userId: x-hasura-User-Id
-  role: moderator
-- permission:
-    backend_only: false
-    check:
-      userId:
-        _eq: X-Hasura-User-Id
-    columns:
-    - size
-    - status
-    - createdBy
-    - extension
-    - name
-    - path
-    - updatedBy
-    - url
-    - createdAt
-    - updatedAt
-    - id
-    - userId
-    set:
-      userId: x-hasura-User-Id
   role: user
 select_permissions:
 - permission:
@@ -66,27 +45,6 @@ select_permissions:
     - id
     - name
     - path
-    - sharedDepartment
-    - size
-    - status
-    - updatedAt
-    - updatedBy
-    - url
-    - userId
-    filter:
-      status:
-        _eq: 0
-  role: moderator
-- permission:
-    allow_aggregations: true
-    columns:
-    - createdAt
-    - createdBy
-    - extension
-    - id
-    - name
-    - path
-    - sharedDepartment
     - size
     - status
     - updatedAt
@@ -99,24 +57,6 @@ select_permissions:
   role: user
 update_permissions:
 - permission:
-    check: {}
-    columns:
-    - createdAt
-    - createdBy
-    - extension
-    - id
-    - name
-    - path
-    - sharedDepartment
-    - size
-    - status
-    - updatedAt
-    - updatedBy
-    - url
-    - userId
-    filter: {}
-  role: moderator
-- permission:
     check:
       userId:
         _eq: X-Hasura-User-Id
@@ -127,7 +67,6 @@ update_permissions:
     - id
     - name
     - path
-    - sharedDepartment
     - size
     - status
     - updatedAt

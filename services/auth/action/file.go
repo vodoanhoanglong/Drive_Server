@@ -22,7 +22,6 @@ type move_file_args map[string]interface{}
 type files_pk_columns_input map[string]interface{}
 type files_set_input map[string]interface{}
 type check_file_name_args map[string]interface{}
-type users_bool_exp map[string]interface{}
 
 type UploadFileInput struct {
 	Name      string `json:"name"`
@@ -59,15 +58,8 @@ func uploadFile(ctx *actionContext, payload []byte) (interface{}, error) {
 
 	input := appInput.Data
 
-	departmentId := ""
 	checkPath := ""
-	if input.Path == "department" {
-		departmentId, err = getDepartmentId(ctx)
-		if err != nil {
-			return nil, err
-		}
-		checkPath = input.Path + "/" + ctx.Access.UserID + "/" + departmentId
-	} else if input.Path == "personal" || input.Path == "general" {
+	if input.Path == "" {
 		checkPath = input.Path + "/" + ctx.Access.UserID
 	} else {
 		checkPath = input.Path
@@ -265,52 +257,12 @@ func checkFileName(ctx *actionContext, path string, name string, extension strin
 }
 
 func checkPermission(ctx *actionContext, path string) (bool, error) {
-	isOwner := true
 	userId := strings.Split(path, "/")[1]
 	errors := errors.New("you don't have permission to access this file")
 
 	if ctx.Access.UserID != userId {
-		isOwner = false
-	}
-
-	if strings.HasPrefix(path, "department") {
-		if ctx.Access.Role != "moderator" && !isOwner {
-			return false, errors
-		}
-	} else {
-		if !isOwner {
-			return false, errors
-		}
+		return false, errors
 	}
 
 	return true, nil
-}
-
-func getDepartmentId(ctx *actionContext) (string, error) {
-
-	var query struct {
-		Users []struct {
-			DepartmentId string `graphql:"departmentId"`
-		} `graphql:"users(where: $where, limit: 1)"`
-	}
-
-	variables := map[string]interface{}{
-		"where": users_bool_exp{
-			"id": map[string]interface{}{
-				"_eq": ctx.Access.UserID,
-			},
-		},
-	}
-
-	err := ctx.Controller.Query(context.Background(), &query, variables, graphql.OperationName("GetDepartmentId"))
-
-	if err != nil {
-		return "", err
-	}
-
-	if len(query.Users) == 0 {
-		return "", errors.New("departmentId not found")
-	}
-
-	return query.Users[0].DepartmentId, nil
 }

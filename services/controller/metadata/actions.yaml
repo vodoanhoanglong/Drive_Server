@@ -4,14 +4,12 @@ actions:
     kind: synchronous
     handler: '{{AUTH_BASE_URL}}/actions'
   permissions:
-  - role: moderator
   - role: user
 - name: createAccount
   definition:
     kind: synchronous
     handler: '{{AUTH_BASE_URL}}/actions'
   permissions:
-  - role: moderator
   - role: anonymous
 - name: forgotPassword
   definition:
@@ -31,7 +29,6 @@ actions:
     handler: '{{AUTH_BASE_URL}}/actions'
   permissions:
   - role: user
-  - role: moderator
 - name: refreshToken
   definition:
     kind: synchronous
@@ -39,21 +36,18 @@ actions:
   permissions:
   - role: anonymous
   - role: user
-  - role: moderator
 - name: updateFile
   definition:
     kind: synchronous
     handler: '{{AUTH_BASE_URL}}/actions'
   permissions:
   - role: user
-  - role: moderator
 - name: uploadFile
   definition:
     kind: synchronous
     handler: '{{AUTH_BASE_URL}}/actions'
   permissions:
   - role: user
-  - role: moderator
 custom_types:
   enums: []
   input_objects:

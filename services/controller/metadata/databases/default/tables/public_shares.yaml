@@ -26,24 +26,6 @@ insert_permissions:
     - updatedAt
     - updatedBy
     - userId
-  role: moderator
-- permission:
-    backend_only: false
-    check:
-      file:
-        _and:
-        - userId:
-            _eq: X-Hasura-User-Id
-        - path:
-            _nsimilar: general%
-    columns:
-    - createdAt
-    - createdBy
-    - fileId
-    - status
-    - updatedAt
-    - updatedBy
-    - userId
   role: user
 select_permissions:
 - permission:
@@ -65,46 +47,8 @@ select_permissions:
       - file:
           status:
             _eq: 0
-  role: moderator
-- permission:
-    allow_aggregations: true
-    columns:
-    - createdAt
-    - createdBy
-    - fileId
-    - status
-    - updatedAt
-    - updatedBy
-    - userId
-    filter:
-      _and:
-      - userId:
-          _eq: X-Hasura-User-Id
-      - status:
-          _eq: 0
-      - file:
-          status:
-            _eq: 0
   role: user
 update_permissions:
-- permission:
-    check:
-      file:
-        userId:
-          _eq: X-Hasura-User-Id
-    columns:
-    - createdAt
-    - createdBy
-    - fileId
-    - status
-    - updatedAt
-    - updatedBy
-    - userId
-    filter:
-      file:
-        userId:
-          _eq: X-Hasura-User-Id
-  role: moderator
 - permission:
     check:
       _or:
