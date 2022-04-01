@@ -71,7 +71,14 @@ func createAccount(ctx *actionContext, payload []byte) (interface{}, error) {
 		return nil, util.ErrBadRequest(err)
 	}
 
+	token, err := ctx.JwtAuth.EncodeToken(query.CreateAccount.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return map[string]string{
-		"id": query.CreateAccount.ID,
+		"id":           query.CreateAccount.ID,
+		"access_token": token.AccessToken,
 	}, nil
 }
