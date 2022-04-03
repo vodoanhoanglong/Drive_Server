@@ -1,1 +1,0 @@
-DROP FUNCTION "public"."filter"("pg_catalog"."text", "pg_catalog"."int4", "pg_catalog"."int4");

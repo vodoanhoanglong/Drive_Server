@@ -2,9 +2,9 @@ table:
   name: files
   schema: public
 object_relationships:
-- name: user
+- name: account
   using:
-    foreign_key_constraint_on: userId
+    foreign_key_constraint_on: accountId
 array_relationships:
 - name: shares
   using:
@@ -16,55 +16,50 @@ array_relationships:
 insert_permissions:
 - permission:
     backend_only: false
-    check:
-      userId:
-        _eq: X-Hasura-User-Id
+    check: {}
     columns:
-    - size
-    - status
-    - createdBy
+    - id
+    - path
     - extension
     - name
-    - path
-    - updatedBy
+    - size
     - url
+    - status
     - createdAt
+    - createdBy
     - updatedAt
-    - id
-    - userId
+    - updatedBy
+    - accountId
     set:
-      userId: x-hasura-User-Id
+      accountId: x-hasura-User-Id
   role: user
 select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - createdAt
+    - size
+    - status
+    - accountId
     - createdBy
     - extension
     - id
     - name
     - path
-    - size
-    - status
-    - updatedAt
     - updatedBy
     - url
-    - userId
+    - createdAt
+    - updatedAt
     filter:
       status:
         _eq: 0
   role: user
 update_permissions:
 - permission:
-    check:
-      userId:
-        _eq: X-Hasura-User-Id
+    check: null
     columns:
     - createdAt
     - createdBy
     - extension
-    - id
     - name
     - path
     - size
@@ -72,10 +67,7 @@ update_permissions:
     - updatedAt
     - updatedBy
     - url
-    - userId
     filter:
-      userId:
+      accountId:
         _eq: X-Hasura-User-Id
-    set:
-      userId: x-hasura-User-Id
   role: user

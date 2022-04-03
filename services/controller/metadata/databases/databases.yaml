@@ -7,6 +7,9 @@
       isolation_level: read-committed
       pool_settings:
         connection_lifetime: 600
-      use_prepared_statements: false
+        idle_timeout: 180
+        max_connections: 50
+        retries: 1
+      use_prepared_statements: true
   tables: "!include default/tables/tables.yaml"
   functions: "!include default/functions/functions.yaml"

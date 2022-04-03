@@ -1,27 +1,3 @@
 table:
   name: me
   schema: public
-select_permissions:
-- permission:
-    columns:
-    - avatar_url
-    - display_name
-    - email
-    - id
-    - role
-    filter:
-      _and:
-      - id:
-          _eq: X-Hasura-User-Id
-  role: user
-update_permissions:
-- permission:
-    check: null
-    columns:
-    - avatar_url
-    - display_name
-    filter:
-      _and:
-      - id:
-          _eq: X-Hasura-User-Id
-  role: user

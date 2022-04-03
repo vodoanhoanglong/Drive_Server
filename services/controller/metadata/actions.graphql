@@ -142,7 +142,6 @@ type AffectedRowsOutput {
 
 type CreateAccountOutput {
   id: String
-  access_token: String
 }
 
 type AccessTokenOutput {
