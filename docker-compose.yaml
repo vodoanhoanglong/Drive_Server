@@ -13,7 +13,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
   controller:
-    image: hasura/graphql-engine:v2.2.0.cli-migrations-v3
+    image: hasura/graphql-engine:v2.3.1
     ports:
       - "8080"
     labels:
