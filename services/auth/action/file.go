@@ -60,7 +60,7 @@ func uploadFile(ctx *actionContext, payload []byte) (interface{}, error) {
 
 	checkPath := ""
 	if input.Path == "" {
-		checkPath = input.Path + "/" + ctx.Access.UserID
+		checkPath = ctx.Access.UserID
 	} else {
 		checkPath = input.Path
 	}
@@ -89,7 +89,7 @@ func uploadFile(ctx *actionContext, payload []byte) (interface{}, error) {
 			"url":       input.Url,
 			"size":      input.Size,
 			"extension": input.Extension,
-			"userId":    ctx.Access.UserID,
+			"accountId": ctx.Access.UserID,
 		},
 	}
 
