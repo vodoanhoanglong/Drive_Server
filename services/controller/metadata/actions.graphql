@@ -109,7 +109,7 @@ input RevokeTokenInput {
 
 input UploadFileInput {
   name: String!
-  path: String!
+  path: String
   size: Int!
   url: String!
   extension: String!
