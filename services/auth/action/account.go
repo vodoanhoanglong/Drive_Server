@@ -18,6 +18,7 @@ type account_set_input map[string]interface{}
 type account_pk_columns_input map[string]interface{}
 
 type CreateAccountInput struct {
+	FullName string `json:fullName`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Role     string `json:"role"`
@@ -52,6 +53,7 @@ func createAccount(ctx *actionContext, payload []byte) (interface{}, error) {
 			ID       string `graphql:"id"`
 			Email    string `graphql:"email"`
 			Password string `graphql:"password"`
+			FullName string `graphql:"fullName"`
 			Role     string `graphql:"role"`
 		} `graphql:"insert_account_one(object: $object)"`
 	}
@@ -60,6 +62,7 @@ func createAccount(ctx *actionContext, payload []byte) (interface{}, error) {
 		"object": account_insert_input{
 			"email":      appInput.Data.Email,
 			"password":   string(passwordHashed),
+			"fullName":   appInput.Data.FullName,
 			"role":       appInput.Data.Role,
 			"randomHash": randomHashed,
 		},
