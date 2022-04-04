@@ -74,10 +74,13 @@ func uploadFile(ctx *actionContext, payload []byte) (interface{}, error) {
 
 	var query struct {
 		UploadFile struct {
-			ID   string `graphql:"id"`
-			Name string `graphql:"name"`
-			Path string `graphql:"path"`
-			Url  string `graphql:"url"`
+			ID        string `graphql:"id"`
+			Name      string `graphql:"name"`
+			Path      string `graphql:"path"`
+			Url       string `graphql:"url"`
+			Extension string `graphql:"extension"`
+			Size      int    `graphql:"size"`
+			AccountId string `graphql:"accountId"`
 		} `graphql:"insert_files_one(object: $object)"`
 	}
 
@@ -101,11 +104,14 @@ func uploadFile(ctx *actionContext, payload []byte) (interface{}, error) {
 
 	results := query.UploadFile
 
-	return map[string]string{
-		"id":   results.ID,
-		"name": results.Name,
-		"path": results.Path,
-		"url":  results.Url,
+	return map[string]interface{}{
+		"id":        results.ID,
+		"name":      results.Name,
+		"path":      results.Path,
+		"url":       results.Url,
+		"size":      results.Size,
+		"extension": results.Extension,
+		"accountId": results.AccountId,
 	}, nil
 }
 

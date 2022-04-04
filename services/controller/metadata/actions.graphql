@@ -179,6 +179,9 @@ type UploadFileOutput {
   name: String
   path: String
   url: String
+  extension: String
+  size: Int
+  accountId: String
 }
 
 type MoveFileOutput {
