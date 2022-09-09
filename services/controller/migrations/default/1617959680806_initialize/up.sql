@@ -47,9 +47,6 @@ CREATE TRIGGER "account_set_current_timestamp_updated_at"
 BEFORE INSERT OR UPDATE ON "public"."account"
 FOR EACH ROW
 EXECUTE PROCEDURE "public"."set_current_timestamp_updated_at"();
-
-CREATE VIEW public.me AS
-  SELECT * FROM public.account;
 --------------------------------------------------
 -- END TABLE public.account
 --------------------------------------------------

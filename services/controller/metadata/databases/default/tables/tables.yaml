@@ -1,4 +1,3 @@
 - "!include public_account.yaml"
 - "!include public_files.yaml"
-- "!include public_me.yaml"
 - "!include public_shares.yaml"
