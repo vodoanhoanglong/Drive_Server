@@ -8,42 +8,48 @@ object_relationships:
 - name: file
   using:
     foreign_key_constraint_on: fileId
+- name: owner
+  using:
+    foreign_key_constraint_on: createdBy
+- name: userUpdated
+  using:
+    foreign_key_constraint_on: updatedBy
 insert_permissions:
 - permission:
     backend_only: false
     check:
       file:
-        accountId:
+        createdBy:
           _eq: X-Hasura-User-Id
     columns:
-    - status
     - accountId
+    - createdAt
     - createdBy
     - fileId
-    - updatedBy
-    - createdAt
+    - status
     - updatedAt
+    - updatedBy
   role: user
 select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - status
     - accountId
+    - createdAt
     - createdBy
     - fileId
-    - updatedBy
-    - createdAt
+    - status
     - updatedAt
+    - updatedBy
     filter:
       _and:
       - accountId:
           _eq: X-Hasura-User-Id
       - status:
-          _eq: 0
+          _neq: deleted
       - file:
           status:
-            _eq: 0
+            _neq: deleted
   role: user
 update_permissions:
 - permission:
@@ -61,6 +67,6 @@ update_permissions:
       - accountId:
           _eq: X-Hasura-User-Id
       - file:
-          accountId:
+          createdBy:
             _eq: X-Hasura-User-Id
   role: user

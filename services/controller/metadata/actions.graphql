@@ -181,7 +181,8 @@ type UploadFileOutput {
   url: String
   extension: String
   size: Int
-  accountId: String
+  createdBy: String
+  layer: Int
 }
 
 type MoveFileOutput {

@@ -32,7 +32,7 @@ CREATE TABLE "public"."account" (
   "fullName"              TEXT,
   "phone"                 TEXT,
   "randomHash"            TEXT,
-  "status"                INTEGER DEFAULT 0,
+  "status"                TEXT DEFAULT 'active',
   "created_at"            TIMESTAMPTZ NOT NULL DEFAULT now(), 
   "updated_at"            TIMESTAMPTZ NOT NULL DEFAULT now(),  
   "created_by"            TEXT NULL, 

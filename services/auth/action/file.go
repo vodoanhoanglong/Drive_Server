@@ -71,6 +71,7 @@ func uploadFile(ctx *actionContext, payload []byte) (interface{}, error) {
 
 	randomUUID := uuid.New().String()
 	path := checkPath + "/" + randomUUID
+	layer := strings.Split(path, "/")
 
 	var query struct {
 		UploadFile struct {
@@ -80,7 +81,8 @@ func uploadFile(ctx *actionContext, payload []byte) (interface{}, error) {
 			Url       string `graphql:"url"`
 			Extension string `graphql:"extension"`
 			Size      int    `graphql:"size"`
-			AccountId string `graphql:"accountId"`
+			CreatedBy string `graphql:"createdBy"`
+			Layer     int    `graphql:"layer"`
 		} `graphql:"insert_files_one(object: $object)"`
 	}
 
@@ -92,7 +94,8 @@ func uploadFile(ctx *actionContext, payload []byte) (interface{}, error) {
 			"url":       input.Url,
 			"size":      input.Size,
 			"extension": input.Extension,
-			"accountId": ctx.Access.UserID,
+			"createdBy": ctx.Access.UserID,
+			"layer":     len(layer) - 1,
 		},
 	}
 
@@ -111,7 +114,8 @@ func uploadFile(ctx *actionContext, payload []byte) (interface{}, error) {
 		"url":       results.Url,
 		"size":      results.Size,
 		"extension": results.Extension,
-		"accountId": results.AccountId,
+		"createdBy": results.CreatedBy,
+		"layer":     results.Layer,
 	}, nil
 }
 

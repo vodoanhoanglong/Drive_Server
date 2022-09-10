@@ -5,7 +5,7 @@ array_relationships:
 - name: files
   using:
     foreign_key_constraint_on:
-      column: accountId
+      column: createdBy
       table:
         name: files
         schema: public
@@ -50,9 +50,7 @@ select_permissions:
     - updated_by
     - created_at
     - updated_at
-    filter:
-      id:
-        _eq: X-Hasura-User-Id
+    filter: {}
   role: user
 update_permissions:
 - permission:
