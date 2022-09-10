@@ -15,6 +15,7 @@ const (
 	actionUploadFile = "uploadFile"
 	actionMoveFile   = "moveFile"
 	actionUpdateFile = "updateFile"
+	actionShareFile  = "shareFile"
 )
 
 type files_insert_input map[string]interface{}
@@ -22,7 +23,14 @@ type move_file_args map[string]interface{}
 type files_pk_columns_input map[string]interface{}
 type files_set_input map[string]interface{}
 type check_file_name_args map[string]interface{}
+type files_bool_exp map[string]interface{}
 
+type shares_insert_input map[string]interface{}
+
+type ShareFileInput struct {
+	Path   string   `json:"path"`
+	Emails []string `json:"emails"`
+}
 type UploadFileInput struct {
 	Name      string `json:"name"`
 	Path      string `json:"path"`
@@ -267,7 +275,7 @@ func checkFileName(ctx *actionContext, path string, name string, extension strin
 }
 
 func checkPermission(ctx *actionContext, path string) (bool, error) {
-	userId := strings.Split(path, "/")[1]
+	userId := strings.Split(path, "/")[0]
 	errors := errors.New("you don't have permission to access this file")
 
 	if ctx.Access.UserID != userId {
@@ -275,4 +283,87 @@ func checkPermission(ctx *actionContext, path string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func shareFile(ctx *actionContext, payload []byte) (interface{}, error) {
+	var appInput struct {
+		Data ShareFileInput `json:"data"`
+	}
+
+	err := json.Unmarshal([]byte(payload), &appInput)
+	if err != nil {
+		return nil, util.ErrBadRequest(err)
+	}
+
+	if ok, reason := checkPermission(ctx, appInput.Data.Path); !ok {
+		return nil, reason
+	}
+
+	var query struct {
+		Accounts []struct {
+			ID string `graphql:"id"`
+		} `graphql:"account(where: $where)"`
+	}
+
+	variables := map[string]interface{}{
+		"where": account_bool_exp{
+			"email": map[string]interface{}{
+				"_in": appInput.Data.Emails,
+			},
+		},
+	}
+
+	err = ctx.Controller.Query(context.Background(), &query, variables)
+
+	if err != nil {
+		return nil, util.ErrBadRequest(err)
+	}
+
+	var queryFile struct {
+		Files []struct {
+			ID    string `graphql:"id"`
+			Layer int    `graphql:"layer"`
+		} `graphql:"files(where: $where)"`
+	}
+
+	variablesFile := map[string]interface{}{
+		"where": files_bool_exp{
+			"path": map[string]interface{}{
+				"_similar": appInput.Data.Path + "/%",
+			},
+		},
+	}
+
+	err = ctx.Controller.Query(context.Background(), &queryFile, variablesFile)
+
+	if err != nil {
+		return nil, util.ErrBadRequest(err)
+	}
+
+	for _, account := range query.Accounts {
+		parseFile := []shares_insert_input{}
+
+		for _, file := range queryFile.Files {
+			content := shares_insert_input{"fileId": file.ID, "accountId": account.ID, "layer": file.Layer, "createdBy": ctx.Access.UserID}
+			parseFile = append(parseFile, content)
+		}
+		var insertObject struct {
+			InsertShareFileOne struct {
+				AffectedRows int `graphql:"affected_rows"`
+			} `graphql:"insert_shares(objects: $objects)"`
+		}
+
+		variablesInsert := map[string]interface{}{
+			"objects": parseFile,
+		}
+
+		err = ctx.Controller.Mutate(context.Background(), &insertObject, variablesInsert)
+
+		if err != nil {
+			return nil, util.ErrBadRequest(err)
+		}
+	}
+	return map[string]string{
+		"message": "Shared success",
+	}, nil
 }

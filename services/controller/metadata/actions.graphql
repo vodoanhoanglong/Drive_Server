@@ -35,6 +35,12 @@ type Mutation {
 }
 
 type Mutation {
+  shareFile(
+    data: ShareFileInput!
+  ): ShareFileOutput
+}
+
+type Mutation {
   updateFile(
     data: UpdateFileInput!
   ): UpdateFileOutput
@@ -130,6 +136,11 @@ input UpdateFileInput {
   extension: String!
 }
 
+input ShareFileInput {
+  emails: [String]
+  path: String
+}
+
 type MessageOutput {
   message: String!
   id: String!
@@ -192,5 +203,9 @@ type MoveFileOutput {
 type UpdateFileOutput {
   id: String
   name: String
+}
+
+type ShareFileOutput {
+  message: String
 }
 

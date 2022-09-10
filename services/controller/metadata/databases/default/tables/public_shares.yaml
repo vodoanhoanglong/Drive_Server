@@ -38,6 +38,7 @@ select_permissions:
     - createdAt
     - createdBy
     - fileId
+    - layer
     - status
     - updatedAt
     - updatedBy
