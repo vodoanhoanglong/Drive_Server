@@ -65,6 +65,7 @@ func createAccount(ctx *actionContext, payload []byte) (interface{}, error) {
 			"fullName":   appInput.Data.FullName,
 			"role":       appInput.Data.Role,
 			"randomHash": randomHashed,
+			"loginType":  firebase,
 		},
 	}
 
@@ -81,7 +82,8 @@ func createAccount(ctx *actionContext, payload []byte) (interface{}, error) {
 	}
 
 	return map[string]string{
-		"id":           query.CreateAccount.ID,
-		"access_token": token.AccessToken,
+		"id":            query.CreateAccount.ID,
+		"access_token":  token.AccessToken,
+		"refresh_token": token.RefreshToken,
 	}, nil
 }

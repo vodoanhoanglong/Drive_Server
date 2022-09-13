@@ -25,6 +25,7 @@ insert_permissions:
     - created_at
     - created_by
     - fullName
+    - loginType
     - phone
     - randomHash
     - role
@@ -36,20 +37,21 @@ select_permissions:
 - permission:
     allow_aggregations: true
     columns:
-    - birthday
-    - status
     - avatar_url
+    - birthday
+    - created_at
     - created_by
     - email
     - fullName
     - id
+    - loginType
     - password
     - phone
     - randomHash
     - role
-    - updated_by
-    - created_at
+    - status
     - updated_at
+    - updated_by
     filter: {}
   role: user
 update_permissions:
@@ -62,6 +64,7 @@ update_permissions:
     - created_by
     - email
     - fullName
+    - loginType
     - password
     - phone
     - randomHash
