@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/hasura/go-graphql-client"
 	"nexlab.tech/core/pkg/util"
 )
@@ -14,9 +15,9 @@ const (
 	actionRefreshToken = "refreshToken"
 
 	// enum login type
-	firebase = "firebase"
-	facebook = "facebook"
-	google   = "google"
+	defaultAccount = "default"
+	facebook       = "facebook"
+	google         = "google"
 )
 
 func login(ctx *actionContext, payload []byte) (interface{}, error) {
@@ -36,7 +37,7 @@ func login(ctx *actionContext, payload []byte) (interface{}, error) {
 		return nil, util.ErrBadRequest(err)
 	}
 
-	if input.Data.LoginType != firebase {
+	if input.Data.LoginType != defaultAccount {
 		tokenThirdParty, errThirdParty := findOrCreateLoginThirdParty(ctx, input.Data.Email, input.Data.FullName, input.Data.Avatar, input.Data.LoginType)
 
 		if errThirdParty != nil {
@@ -132,7 +133,7 @@ func findOrCreateLoginThirdParty(ctx *actionContext, email string, fullName stri
 				"_like": email,
 			},
 			"loginType": map[string]interface{}{
-				"_neq": firebase,
+				"_neq": defaultAccount,
 			},
 		},
 	}
@@ -153,6 +154,13 @@ func findOrCreateLoginThirdParty(ctx *actionContext, email string, fullName stri
 			} `graphql:"insert_account_one(object: $object)"`
 		}
 
+		randomUUID := uuid.New().String()
+		randomHashed, err := ctx.JwtAuth.EncryptPassword(randomUUID)
+
+		if err != nil {
+			return nil, util.ErrBadRequest(err)
+		}
+
 		mutationVariables := map[string]interface{}{
 			"object": account_insert_input{
 				"email":      email,
@@ -160,6 +168,7 @@ func findOrCreateLoginThirdParty(ctx *actionContext, email string, fullName stri
 				"fullName":   fullName,
 				"avatar_url": avatar,
 				"loginType":  loginType,
+				"randomHash": randomHashed,
 			},
 		}
 

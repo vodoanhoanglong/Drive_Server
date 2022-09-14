@@ -65,7 +65,7 @@ func createAccount(ctx *actionContext, payload []byte) (interface{}, error) {
 			"fullName":   appInput.Data.FullName,
 			"role":       appInput.Data.Role,
 			"randomHash": randomHashed,
-			"loginType":  firebase,
+			"loginType":  defaultAccount,
 		},
 	}
 
