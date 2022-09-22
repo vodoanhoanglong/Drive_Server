@@ -329,7 +329,7 @@ func shareFile(ctx *actionContext, payload []byte) (interface{}, error) {
 	variablesFile := map[string]interface{}{
 		"where": files_bool_exp{
 			"path": map[string]interface{}{
-				"_similar": appInput.Data.Path + "/%",
+				"_similar": appInput.Data.Path + "%",
 			},
 		},
 	}
