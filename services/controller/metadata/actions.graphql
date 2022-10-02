@@ -108,10 +108,7 @@ input UploadFileInput {
 
 input MoveFileInput {
   to_path: String!
-  to_extension: String!
   from_path: String!
-  from_extension: String!
-  from_name: String!
 }
 
 input UpdateFileInput {

@@ -71,3 +71,9 @@ update_permissions:
       createdBy:
         _eq: X-Hasura-User-Id
   role: user
+delete_permissions:
+- permission:
+    filter:
+      createdBy:
+        _eq: X-Hasura-User-Id
+  role: user

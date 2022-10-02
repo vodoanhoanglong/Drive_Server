@@ -40,11 +40,8 @@ type UploadFileInput struct {
 }
 
 type MoveFileInput struct {
-	ToPath        string `json:"to_path"`
-	ToExtension   string `json:"to_extension"`
-	FromPath      string `json:"from_path"`
-	FromExtension string `json:"from_extension"`
-	FromName      string `json:"from_name"`
+	ToPath   string `json:"to_path"`
+	FromPath string `json:"from_path"`
 }
 
 type UpdateFileInput struct {
@@ -139,8 +136,60 @@ func moveFile(ctx *actionContext, payload []byte) (interface{}, error) {
 
 	input := appInput.Data
 
-	if input.ToExtension != "folder" {
-		return nil, errors.New("destination path must be a directory")
+	fromPathSplit := strings.Split(input.FromPath, "/")
+	toPathSplit := strings.Split(input.ToPath, "/")
+
+	fromPathId := fromPathSplit[len(fromPathSplit)-1]
+	toPathId := toPathSplit[len(toPathSplit)-1]
+
+	var getFileFromPath struct {
+		File []struct {
+			ID        string `graphql:"id"`
+			Name      string `graphql:"name"`
+			Extension string `graphql:"extension"`
+		} `graphql:"files(where: $where, limit: 1)"`
+	}
+
+	variableFromPath := map[string]interface{}{
+		"where": files_bool_exp{
+			"id": map[string]interface{}{
+				"_eq": fromPathId,
+			},
+		},
+	}
+
+	err = ctx.Controller.Query(context.Background(), &getFileFromPath, variableFromPath)
+
+	if err != nil {
+		return nil, util.ErrBadRequest(err)
+	}
+
+	var getFileToPath struct {
+		File []struct {
+			ID        string `graphql:"id"`
+			Name      string `graphql:"name"`
+			Extension string `graphql:"extension"`
+		} `graphql:"files(where: $where, limit: 1)"`
+	}
+
+	variableToPath := map[string]interface{}{
+		"where": files_bool_exp{
+			"id": map[string]interface{}{
+				"_eq": toPathId,
+			},
+		},
+	}
+
+	err = ctx.Controller.Query(context.Background(), &getFileToPath, variableToPath)
+
+	if err != nil {
+		return nil, util.ErrBadRequest(err)
+	}
+
+	if input.ToPath != ctx.Access.UserID {
+		if getFileToPath.File[0].Extension != "folder" {
+			return nil, errors.New("destination path must be a directory")
+		}
 	}
 
 	toPath := strings.Split(input.ToPath, "/")
@@ -161,7 +210,7 @@ func moveFile(ctx *actionContext, payload []byte) (interface{}, error) {
 		return nil, err
 	}
 
-	if ok, _ := checkFileName(ctx, input.ToPath, input.FromName, input.FromExtension); ok {
+	if ok, _ := checkFileName(ctx, input.ToPath, getFileFromPath.File[0].Name, getFileFromPath.File[0].Extension); ok {
 		return nil, errors.New("filename already exists")
 	}
 
