@@ -1,37 +1,55 @@
 type Mutation {
-  changeAccountPassword(data: ChangeAccountPasswordInput!): MessageOutput
+  changeAccountPassword(
+    data: ChangeAccountPasswordInput!
+  ): MessageOutput
 }
 
 type Mutation {
-  createAccount(data: CreateAccountInput!): CreateAccountOutput
+  createAccount(
+    data: CreateAccountInput!
+  ): CreateAccountOutput
 }
 
 type Mutation {
-  forgotPassword(data: Input!): Output!
+  forgotPassword(
+    data: Input!
+  ): Output!
 }
 
 type Mutation {
-  login(data: LoginInput!): AccessTokenOutput!
+  login(
+    data: LoginInput!
+  ): AccessTokenOutput!
 }
 
 type Mutation {
-  moveFile(data: MoveFileInput!): MoveFileOutput
+  moveFile(
+    data: MoveFileInput!
+  ): MoveFileOutput
 }
 
 type Mutation {
-  refreshToken(data: RefreshTokenInput!): AccessTokenOutput!
+  refreshToken(
+    data: RefreshTokenInput!
+  ): AccessTokenOutput!
 }
 
 type Mutation {
-  shareFile(data: ShareFileInput!): ShareFileOutput
+  shareFile(
+    data: ShareFileInput!
+  ): ShareFileOutput
 }
 
 type Mutation {
-  updateFile(data: UpdateFileInput!): UpdateFileOutput
+  updateFile(
+    data: UpdateFileInput!
+  ): UpdateFileOutput
 }
 
 type Mutation {
-  uploadFile(data: UploadFileInput!): UploadFileOutput
+  uploadFile(
+    data: UploadFileInput!
+  ): UploadFileOutput
 }
 
 input ChangeUserPasswordInput {
@@ -191,3 +209,4 @@ type UpdateFileOutput {
 type ShareFileOutput {
   message: String
 }
+
